@@ -141,36 +141,96 @@ public abstract class Strategy {
 
     public static class StrategyBestFirst extends Strategy {
         private Heuristic heuristic;
+        private ArrayDeque<State> frontier;
+        private HashSet<State> frontierSet;
 
         public StrategyBestFirst(Heuristic h) {
             super();
             this.heuristic = h;
-            throw new NotImplementedException();
+            frontier = new ArrayDeque<>();
+            frontierSet = new HashSet<>();
         }
 
         @Override
         public State getAndRemoveLeaf() {
-            throw new NotImplementedException();
+            State n = frontier.pollFirst();
+            frontierSet.remove(n);
+            return n;
         }
 
         @Override
         public void addToFrontier(State n) {
-            throw new NotImplementedException();
+            
+            ArrayDeque<State> new_frontier = new ArrayDeque<>();
+            HashSet<State> new_frontierSet = new HashSet<>();
+            boolean found_place = false;
+            
+            
+            // if (!frontierIsEmpty()) {
+            //     for (State n_old : frontier) {
+            //         if (!found_place) {
+            //             if (heuristic.compare(n, n_old) < 0) {
+                            
+            //                 // System.err.println("Comparing: " + n.g()+heuristic.f(n) + " to " + n_old.g()+heuristic.f(n_old) + " = " + heuristic.compare(n, n_old));
+            //                 new_frontier.add(n);
+            //                 new_frontierSet.add(n);
+            //                 found_place = true;
+            //             }
+            //             new_frontier.add(n_old);
+            //             new_frontierSet.add(n_old);
+            //         }
+            //         else {
+            //             new_frontier.add(n_old);
+            //             new_frontierSet.add(n_old);
+            //         }
+            //     }
+            // }
+            // else {
+            //     new_frontier.addFirst(n);
+            //     new_frontierSet.add(n);
+            // }
+
+            // frontier.clear();
+            // frontierSet.clear();
+            // frontier = new_frontier;
+            // frontierSet = new_frontierSet;
+
+
+            if (!frontierIsEmpty()) {
+                if (heuristic.compare(n, frontier.getFirst()) < 0) {
+                    frontier.addFirst(n);
+                    frontierSet.add(n);
+                } else {
+                    frontier.addLast(n);
+                    frontierSet.add(n);
+                }
+            } else {
+                frontier.addFirst(n);
+                frontierSet.add(n);
+            }
+
+            // for (State n_frontier : frontier) {
+            //     if (heuristic.compare(n, n_frontier) < 0) {
+            //         frontier.addFirst(n);
+            //         frontierSet.add(n);
+            //     }
+            // }
+            
         }
 
         @Override
         public int countFrontier() {
-            throw new NotImplementedException();
+            return frontier.size();
         }
 
         @Override
         public boolean frontierIsEmpty() {
-            throw new NotImplementedException();
+            return frontier.isEmpty();
         }
 
         @Override
         public boolean inFrontier(State n) {
-            throw new NotImplementedException();
+            return frontierSet.contains(n);
         }
 
         @Override
